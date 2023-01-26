@@ -1927,6 +1927,11 @@ type 0207, grid 7.5 mm</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
+<groups>
+<schematic_group name="2Y0A02"/>
+<schematic_group name="NEGATIVE_POWER_SUPPLY"/>
+<schematic_group name="UNITY_BUFFER"/>
+</groups>
 <parts>
 <part name="FRAME1" library="IDP_library" deviceset="FRAME-A4L" device=""/>
 <part name="U$1" library="IDP_library" deviceset="GP2Y0A02YK0F" device="" package3d_urn="urn:adsk.eagle:package:8078634/1"/>
@@ -1954,10 +1959,10 @@ type 0207, grid 7.5 mm</description>
 <sheets>
 <sheet>
 <plain>
-<text x="180.34" y="60.96" size="1.778" layer="91">To Filter output noise</text>
-<text x="124.46" y="38.1" size="1.778" layer="91">Recommended by OP27 Datasheet for Unity Buffer</text>
-<text x="76.2" y="132.08" size="1.778" layer="91">Requested by Sensor Datasheet</text>
-<text x="20.32" y="33.02" size="1.778" layer="91">Basic Voltage Inverter/Regulator p.10 LT1054 Datasheet</text>
+<text x="203.2" y="58.42" size="1.778" layer="91" grouprefs="UNITY_BUFFER">To Filter output noise</text>
+<text x="147.32" y="35.56" size="1.778" layer="91" grouprefs="UNITY_BUFFER">Recommended by OP27 Datasheet for Unity Buffer</text>
+<text x="93.98" y="129.54" size="1.778" layer="91" grouprefs="2Y0A02">Requested by Sensor Datasheet</text>
+<text x="40.64" y="50.8" size="1.778" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY">Basic Voltage Inverter/Regulator p.10 LT1054 Datasheet</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="2.54" y="-2.54" smashed="yes">
@@ -1965,81 +1970,81 @@ type 0207, grid 7.5 mm</description>
 <attribute name="LAST_DATE_TIME" x="184.15" y="3.81" size="2.286" layer="94" font="vector"/>
 <attribute name="SHEET" x="198.12" y="-1.27" size="2.54" layer="94" font="vector"/>
 </instance>
-<instance part="U$1" gate="G$1" x="147.32" y="119.38" smashed="yes">
-<attribute name="NAME" x="134.62" y="119.38" size="1.778" layer="95"/>
-<attribute name="VALUE" x="134.62" y="116.84" size="1.778" layer="95"/>
+<instance part="U$1" gate="G$1" x="165.1" y="116.84" smashed="yes" grouprefs="2Y0A02">
+<attribute name="NAME" x="152.4" y="116.84" size="1.778" layer="95"/>
+<attribute name="VALUE" x="152.4" y="114.3" size="1.778" layer="95"/>
 </instance>
-<instance part="P+1" gate="1" x="119.38" y="142.24" smashed="yes">
-<attribute name="VALUE" x="116.84" y="137.16" size="1.778" layer="96" rot="R90"/>
+<instance part="P+1" gate="1" x="137.16" y="139.7" smashed="yes" grouprefs="2Y0A02">
+<attribute name="VALUE" x="134.62" y="134.62" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="GND1" gate="1" x="127" y="119.38" smashed="yes">
-<attribute name="VALUE" x="124.46" y="116.84" size="1.778" layer="96"/>
+<instance part="GND1" gate="1" x="144.78" y="116.84" smashed="yes" grouprefs="2Y0A02">
+<attribute name="VALUE" x="142.24" y="114.3" size="1.778" layer="96"/>
 </instance>
-<instance part="IC1" gate="G$1" x="142.24" y="68.58" smashed="yes">
-<attribute name="NAME" x="149.86" y="71.12" size="1.778" layer="95"/>
-<attribute name="VALUE" x="149.86" y="64.77" size="1.778" layer="96"/>
+<instance part="IC1" gate="G$1" x="165.1" y="66.04" smashed="yes" grouprefs="UNITY_BUFFER">
+<attribute name="NAME" x="172.72" y="68.58" size="1.778" layer="95"/>
+<attribute name="VALUE" x="172.72" y="62.23" size="1.778" layer="96"/>
 </instance>
-<instance part="R1" gate="G$1" x="147.32" y="50.8" smashed="yes">
-<attribute name="NAME" x="143.51" y="52.2986" size="1.778" layer="95"/>
-<attribute name="VALUE" x="143.51" y="47.498" size="1.778" layer="96"/>
+<instance part="R1" gate="G$1" x="170.18" y="48.26" smashed="yes" grouprefs="UNITY_BUFFER">
+<attribute name="NAME" x="166.37" y="49.7586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="166.37" y="44.958" size="1.778" layer="96"/>
 </instance>
-<instance part="C1" gate="G$1" x="149.86" y="45.72" smashed="yes" rot="R270">
-<attribute name="NAME" x="150.241" y="44.196" size="1.778" layer="95" rot="R270"/>
-<attribute name="VALUE" x="145.161" y="44.196" size="1.778" layer="96" rot="R270"/>
+<instance part="C1" gate="G$1" x="172.72" y="43.18" smashed="yes" rot="R270" grouprefs="UNITY_BUFFER">
+<attribute name="NAME" x="173.101" y="41.656" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="168.021" y="41.656" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="P+2" gate="1" x="142.24" y="86.36" smashed="yes">
-<attribute name="VALUE" x="139.7" y="81.28" size="1.778" layer="96" rot="R90"/>
+<instance part="P+2" gate="1" x="165.1" y="83.82" smashed="yes" grouprefs="UNITY_BUFFER">
+<attribute name="VALUE" x="162.56" y="78.74" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C2" gate="G$1" x="175.26" y="63.5" smashed="yes">
-<attribute name="NAME" x="176.784" y="63.881" size="1.778" layer="95"/>
-<attribute name="VALUE" x="176.784" y="58.801" size="1.778" layer="96"/>
+<instance part="C2" gate="G$1" x="198.12" y="60.96" smashed="yes" grouprefs="UNITY_BUFFER">
+<attribute name="NAME" x="199.644" y="61.341" size="1.778" layer="95"/>
+<attribute name="VALUE" x="199.644" y="56.261" size="1.778" layer="96"/>
 </instance>
-<instance part="GND2" gate="1" x="175.26" y="53.34" smashed="yes">
-<attribute name="VALUE" x="172.72" y="50.8" size="1.778" layer="96"/>
+<instance part="GND2" gate="1" x="198.12" y="50.8" smashed="yes" grouprefs="UNITY_BUFFER">
+<attribute name="VALUE" x="195.58" y="48.26" size="1.778" layer="96"/>
 </instance>
-<instance part="C3" gate="G$1" x="114.3" y="134.62" smashed="yes">
-<attribute name="NAME" x="115.824" y="135.001" size="1.778" layer="95"/>
-<attribute name="VALUE" x="115.824" y="129.921" size="1.778" layer="96"/>
+<instance part="C3" gate="G$1" x="132.08" y="132.08" smashed="yes" grouprefs="2Y0A02">
+<attribute name="NAME" x="133.604" y="132.461" size="1.778" layer="95"/>
+<attribute name="VALUE" x="133.604" y="127.381" size="1.778" layer="96"/>
 </instance>
-<instance part="U1" gate="A" x="25.4" y="55.88" smashed="yes">
-<attribute name="NAME" x="51.1556" y="64.9986" size="2.0828" layer="95" ratio="6" rot="SR0"/>
-<attribute name="VALUE" x="50.5206" y="62.4586" size="2.0828" layer="96" ratio="6" rot="SR0"/>
+<instance part="U1" gate="A" x="45.72" y="73.66" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="71.4756" y="82.7786" size="2.0828" layer="95" ratio="6" rot="SR0"/>
+<attribute name="VALUE" x="70.8406" y="80.2386" size="2.0828" layer="96" ratio="6" rot="SR0"/>
 </instance>
-<instance part="C4" gate="G$1" x="17.78" y="53.34" smashed="yes">
-<attribute name="NAME" x="18.923" y="53.8226" size="1.778" layer="95"/>
-<attribute name="VALUE" x="18.923" y="48.7426" size="1.778" layer="96"/>
+<instance part="C4" gate="G$1" x="38.1" y="71.12" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="39.243" y="71.6026" size="1.778" layer="95"/>
+<attribute name="VALUE" x="39.243" y="66.5226" size="1.778" layer="96"/>
 </instance>
-<instance part="GND3" gate="1" x="25.4" y="40.64" smashed="yes">
-<attribute name="VALUE" x="22.86" y="38.1" size="1.778" layer="96"/>
+<instance part="GND3" gate="1" x="45.72" y="58.42" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="VALUE" x="43.18" y="55.88" size="1.778" layer="96"/>
 </instance>
-<instance part="P+3" gate="1" x="86.36" y="63.5" smashed="yes">
-<attribute name="VALUE" x="83.82" y="58.42" size="1.778" layer="96" rot="R90"/>
+<instance part="P+3" gate="1" x="106.68" y="81.28" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="VALUE" x="104.14" y="76.2" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="GND4" gate="1" x="106.68" y="50.8" smashed="yes">
-<attribute name="VALUE" x="104.14" y="48.26" size="1.778" layer="96"/>
+<instance part="GND4" gate="1" x="127" y="68.58" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="VALUE" x="124.46" y="66.04" size="1.778" layer="96"/>
 </instance>
-<instance part="R2" gate="G$1" x="93.98" y="50.8" smashed="yes">
-<attribute name="NAME" x="90.17" y="52.2986" size="1.778" layer="95"/>
-<attribute name="VALUE" x="90.17" y="47.498" size="1.778" layer="96"/>
+<instance part="R2" gate="G$1" x="114.3" y="68.58" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="110.49" y="70.0786" size="1.778" layer="95"/>
+<attribute name="VALUE" x="110.49" y="65.278" size="1.778" layer="96"/>
 </instance>
-<instance part="R3" gate="G$1" x="93.98" y="43.18" smashed="yes">
-<attribute name="NAME" x="90.17" y="44.6786" size="1.778" layer="95"/>
-<attribute name="VALUE" x="90.17" y="39.878" size="1.778" layer="96"/>
+<instance part="R3" gate="G$1" x="114.3" y="60.96" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="110.49" y="62.4586" size="1.778" layer="95"/>
+<attribute name="VALUE" x="110.49" y="57.658" size="1.778" layer="96"/>
 </instance>
-<instance part="C5" gate="G$1" x="91.44" y="33.02" smashed="yes" rot="R90">
-<attribute name="NAME" x="91.059" y="34.544" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="96.139" y="34.544" size="1.778" layer="96" rot="R90"/>
+<instance part="C5" gate="G$1" x="111.76" y="50.8" smashed="yes" rot="R90" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="111.379" y="52.324" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="116.459" y="52.324" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C7" gate="G$1" x="96.52" y="55.88" smashed="yes" rot="R90">
-<attribute name="NAME" x="96.0374" y="57.023" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="101.1174" y="57.023" size="1.778" layer="96" rot="R90"/>
+<instance part="C7" gate="G$1" x="116.84" y="73.66" smashed="yes" rot="R90" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="116.3574" y="74.803" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="121.4374" y="74.803" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C6" gate="G$1" x="86.36" y="22.86" smashed="yes" rot="R180">
-<attribute name="NAME" x="85.217" y="22.3774" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="85.217" y="27.4574" size="1.778" layer="96" rot="R180"/>
+<instance part="C6" gate="G$1" x="106.68" y="40.64" smashed="yes" rot="R180" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="NAME" x="105.537" y="40.1574" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="105.537" y="45.2374" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="GND5" gate="1" x="86.36" y="15.24" smashed="yes">
-<attribute name="VALUE" x="83.82" y="12.7" size="1.778" layer="96"/>
+<instance part="GND5" gate="1" x="106.68" y="33.02" smashed="yes" grouprefs="NEGATIVE_POWER_SUPPLY">
+<attribute name="VALUE" x="104.14" y="30.48" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -2048,170 +2053,170 @@ type 0207, grid 7.5 mm</description>
 <net name="+5V" class="0">
 <segment>
 <pinref part="P+1" gate="1" pin="+5V"/>
-<wire x1="119.38" y1="139.7" x2="119.38" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="137.16" x2="137.16" y2="134.62" width="0.1524" layer="91" grouprefs="2Y0A02"/>
 <pinref part="U$1" gate="G$1" pin="VCC"/>
-<wire x1="119.38" y1="137.16" x2="129.54" y2="137.16" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="137.16" x2="114.3" y2="137.16" width="0.1524" layer="91"/>
-<junction x="119.38" y="137.16"/>
+<wire x1="137.16" y1="134.62" x2="147.32" y2="134.62" width="0.1524" layer="91" grouprefs="2Y0A02"/>
+<wire x1="137.16" y1="134.62" x2="132.08" y2="134.62" width="0.1524" layer="91" grouprefs="2Y0A02"/>
+<junction x="137.16" y="134.62" grouprefs="2Y0A02"/>
 <pinref part="C3" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="P+2" gate="1" pin="+5V"/>
 <pinref part="IC1" gate="G$1" pin="+VS"/>
-<wire x1="142.24" y1="83.82" x2="142.24" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="165.1" y1="81.28" x2="165.1" y2="76.2" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
 </segment>
 <segment>
 <pinref part="U1" gate="A" pin="VCC+"/>
-<wire x1="83.82" y1="55.88" x2="86.36" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="73.66" x2="106.68" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="P+3" gate="1" pin="+5V"/>
-<wire x1="86.36" y1="55.88" x2="86.36" y2="60.96" width="0.1524" layer="91"/>
-<junction x="86.36" y="55.88"/>
-<wire x1="86.36" y1="55.88" x2="93.98" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="73.66" x2="106.68" y2="78.74" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<junction x="106.68" y="73.66" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="106.68" y1="73.66" x2="114.3" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="C7" gate="G$1" pin="+"/>
 </segment>
 </net>
 <net name="GND" class="0">
 <segment>
 <pinref part="C2" gate="G$1" pin="2"/>
-<wire x1="175.26" y1="58.42" x2="175.26" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="198.12" y1="55.88" x2="198.12" y2="53.34" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
 <pinref part="GND2" gate="1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U1" gate="A" pin="GND"/>
-<wire x1="27.94" y1="50.8" x2="25.4" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="50.8" x2="25.4" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="68.58" x2="45.72" y2="68.58" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="45.72" y1="68.58" x2="45.72" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="GND4" gate="1" pin="GND"/>
-<wire x1="106.68" y1="55.88" x2="106.68" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="55.88" x2="106.68" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="127" y1="73.66" x2="127" y2="71.12" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="121.92" y1="73.66" x2="127" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="C7" gate="G$1" pin="-"/>
 </segment>
 <segment>
 <pinref part="C6" gate="G$1" pin="+"/>
-<wire x1="86.36" y1="20.32" x2="86.36" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="106.68" y1="38.1" x2="106.68" y2="35.56" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="GND5" gate="1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="C3" gate="G$1" pin="2"/>
-<wire x1="114.3" y1="129.54" x2="114.3" y2="127" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="127" x2="132.08" y2="124.46" width="0.1524" layer="91" grouprefs="2Y0A02"/>
 <pinref part="U$1" gate="G$1" pin="GND"/>
-<wire x1="114.3" y1="127" x2="127" y2="127" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="124.46" x2="144.78" y2="124.46" width="0.1524" layer="91" grouprefs="2Y0A02"/>
 <pinref part="GND1" gate="1" pin="GND"/>
-<wire x1="127" y1="127" x2="129.54" y2="127" width="0.1524" layer="91"/>
-<wire x1="127" y1="127" x2="127" y2="121.92" width="0.1524" layer="91"/>
-<junction x="127" y="127"/>
+<wire x1="144.78" y1="124.46" x2="147.32" y2="124.46" width="0.1524" layer="91" grouprefs="2Y0A02"/>
+<wire x1="144.78" y1="124.46" x2="144.78" y2="119.38" width="0.1524" layer="91" grouprefs="2Y0A02"/>
+<junction x="144.78" y="124.46" grouprefs="2Y0A02"/>
 </segment>
 </net>
 <net name="A0" class="0">
 <segment>
-<wire x1="170.18" y1="50.8" x2="170.18" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="48.26" x2="193.04" y2="66.04" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
 <pinref part="IC1" gate="G$1" pin="OUT"/>
-<wire x1="170.18" y1="68.58" x2="152.4" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="152.4" y1="50.8" x2="154.94" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="66.04" x2="175.26" y2="66.04" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="175.26" y1="48.26" x2="177.8" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <pinref part="C1" gate="G$1" pin="1"/>
-<wire x1="154.94" y1="50.8" x2="170.18" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="152.4" y1="45.72" x2="154.94" y2="45.72" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="45.72" x2="154.94" y2="50.8" width="0.1524" layer="91"/>
-<junction x="154.94" y="50.8"/>
-<wire x1="170.18" y1="68.58" x2="175.26" y2="68.58" width="0.1524" layer="91"/>
-<junction x="170.18" y="68.58"/>
+<wire x1="177.8" y1="48.26" x2="193.04" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="175.26" y1="43.18" x2="177.8" y2="43.18" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="177.8" y1="43.18" x2="177.8" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<junction x="177.8" y="48.26" grouprefs="UNITY_BUFFER"/>
+<wire x1="193.04" y1="66.04" x2="198.12" y2="66.04" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<junction x="193.04" y="66.04" grouprefs="UNITY_BUFFER"/>
 <pinref part="C2" gate="G$1" pin="1"/>
-<wire x1="175.26" y1="68.58" x2="185.42" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="68.58" x2="175.26" y2="66.04" width="0.1524" layer="91"/>
-<junction x="175.26" y="68.58"/>
-<label x="185.42" y="68.58" size="1.778" layer="95"/>
+<wire x1="198.12" y1="66.04" x2="208.28" y2="66.04" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="198.12" y1="66.04" x2="198.12" y2="63.5" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<junction x="198.12" y="66.04" grouprefs="UNITY_BUFFER"/>
+<label x="208.28" y="66.04" size="1.778" layer="95" grouprefs="UNITY_BUFFER"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="IC1" gate="G$1" pin="IN-"/>
-<wire x1="137.16" y1="66.04" x2="127" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="127" y1="66.04" x2="127" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="127" y1="50.8" x2="139.7" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="160.02" y1="63.5" x2="149.86" y2="63.5" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="149.86" y1="63.5" x2="149.86" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="149.86" y1="48.26" x2="162.56" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <pinref part="C1" gate="G$1" pin="2"/>
-<wire x1="139.7" y1="50.8" x2="142.24" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="50.8" x2="139.7" y2="45.72" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="45.72" x2="144.78" y2="45.72" width="0.1524" layer="91"/>
-<junction x="139.7" y="50.8"/>
+<wire x1="162.56" y1="48.26" x2="165.1" y2="48.26" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="162.56" y1="48.26" x2="162.56" y2="43.18" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<wire x1="162.56" y1="43.18" x2="167.64" y2="43.18" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<junction x="162.56" y="48.26" grouprefs="UNITY_BUFFER"/>
 </segment>
 </net>
 <net name="-5V" class="0">
 <segment>
 <pinref part="IC1" gate="G$1" pin="-VS"/>
-<wire x1="142.24" y1="58.42" x2="142.24" y2="55.88" width="0.1524" layer="91"/>
-<label x="142.24" y="55.88" size="1.778" layer="95"/>
+<wire x1="165.1" y1="55.88" x2="165.1" y2="53.34" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<label x="165.1" y="53.34" size="1.778" layer="95" grouprefs="UNITY_BUFFER"/>
 </segment>
 <segment>
 <pinref part="U1" gate="A" pin="VOUT"/>
-<wire x1="83.82" y1="48.26" x2="86.36" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="66.04" x2="106.68" y2="66.04" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="C6" gate="G$1" pin="-"/>
 <pinref part="C5" gate="G$1" pin="1"/>
-<wire x1="86.36" y1="33.02" x2="88.9" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="33.02" x2="86.36" y2="27.94" width="0.1524" layer="91"/>
-<label x="81.28" y="33.02" size="1.778" layer="95"/>
-<wire x1="86.36" y1="48.26" x2="86.36" y2="43.18" width="0.1524" layer="91"/>
-<junction x="86.36" y="33.02"/>
+<wire x1="106.68" y1="50.8" x2="109.22" y2="50.8" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="106.68" y1="50.8" x2="106.68" y2="45.72" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<label x="101.6" y="50.8" size="1.778" layer="95" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="106.68" y1="66.04" x2="106.68" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<junction x="106.68" y="50.8" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="86.36" y1="43.18" x2="86.36" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="43.18" x2="86.36" y2="43.18" width="0.1524" layer="91"/>
-<junction x="86.36" y="43.18"/>
+<wire x1="106.68" y1="60.96" x2="106.68" y2="50.8" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="109.22" y1="60.96" x2="106.68" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<junction x="106.68" y="60.96" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 </segment>
 </net>
 <net name="SIGNAL" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="VOUT"/>
-<wire x1="129.54" y1="132.08" x2="119.38" y2="132.08" width="0.1524" layer="91"/>
-<label x="119.38" y="132.08" size="1.778" layer="95"/>
+<wire x1="147.32" y1="129.54" x2="137.16" y2="129.54" width="0.1524" layer="91" grouprefs="2Y0A02"/>
+<label x="137.16" y="129.54" size="1.778" layer="95" grouprefs="2Y0A02"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="G$1" pin="IN+"/>
-<wire x1="137.16" y1="71.12" x2="127" y2="71.12" width="0.1524" layer="91"/>
-<label x="127" y="71.12" size="1.778" layer="95"/>
+<wire x1="160.02" y1="68.58" x2="149.86" y2="68.58" width="0.1524" layer="91" grouprefs="UNITY_BUFFER"/>
+<label x="149.86" y="68.58" size="1.778" layer="95" grouprefs="UNITY_BUFFER"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="U1" gate="A" pin="CAP+"/>
-<wire x1="27.94" y1="53.34" x2="25.4" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="53.34" x2="25.4" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="71.12" x2="45.72" y2="71.12" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="45.72" y1="71.12" x2="45.72" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="C4" gate="G$1" pin="+"/>
-<wire x1="25.4" y1="55.88" x2="17.78" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="73.66" x2="38.1" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="C4" gate="G$1" pin="-"/>
 <pinref part="U1" gate="A" pin="CAP-"/>
-<wire x1="17.78" y1="48.26" x2="27.94" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="66.04" x2="48.26" y2="66.04" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
 <pinref part="U1" gate="A" pin="VREF"/>
 <pinref part="R2" gate="G$1" pin="1"/>
-<wire x1="83.82" y1="50.8" x2="88.9" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="68.58" x2="109.22" y2="68.58" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="99.06" y1="43.18" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="43.18" x2="114.3" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="43.18" x2="114.3" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="68.58" x2="27.94" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="60.96" x2="121.92" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="121.92" y1="60.96" x2="134.62" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="134.62" y1="60.96" x2="134.62" y2="86.36" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="134.62" y1="86.36" x2="48.26" y2="86.36" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="U1" gate="A" pin="FB/SD"/>
-<wire x1="27.94" y1="68.58" x2="27.94" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="86.36" x2="48.26" y2="73.66" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="99.06" y1="50.8" x2="101.6" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="50.8" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
-<junction x="101.6" y="43.18"/>
+<wire x1="119.38" y1="68.58" x2="121.92" y2="68.58" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="121.92" y1="68.58" x2="121.92" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<junction x="121.92" y="60.96" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 <pinref part="C5" gate="G$1" pin="2"/>
-<wire x1="96.52" y1="33.02" x2="101.6" y2="33.02" width="0.1524" layer="91"/>
-<wire x1="101.6" y1="33.02" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="116.84" y1="50.8" x2="121.92" y2="50.8" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
+<wire x1="121.92" y1="50.8" x2="121.92" y2="60.96" width="0.1524" layer="91" grouprefs="NEGATIVE_POWER_SUPPLY"/>
 </segment>
 </net>
 </nets>
@@ -2234,6 +2239,11 @@ will not be understood (or retained) with this version.
 Since Version 8.3, EAGLE supports the association of 3D packages
 with devices in libraries, schematics, and board files. Those 3D
 packages will not be understood (or retained) with this version.
+</note>
+<note version="9.5" severity="warning">
+Since Version 9.5, EAGLE supports persistent groups with
+schematics, and board files. Those persistent groups
+will not be understood (or retained) with this version.
 </note>
 <note version="8.4" severity="warning">
 Since Version 8.4, EAGLE supports properties for SPICE simulation. 
