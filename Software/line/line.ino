@@ -196,7 +196,7 @@ void junction_detector(void)
             update_region();
             }
         }
-        else{
+        else if(JUNCTION[0] != JUNCTION[1]){
         Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case5. JUNCTION= ");
         Serial.print(JUNCTION[0]);
         Serial.print(JUNCTION[1]);
@@ -213,11 +213,14 @@ void junction_detector(void)
             destination_reached=true;
           } else{state=1; update_region();}
         }
-        else{
+        else if(JUNCTION[0] != JUNCTION[1]){
         Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case6. JUNCTION= ");
         Serial.print(JUNCTION[0]);
         Serial.print(JUNCTION[1]);
-        } 
+        }
+        unsigned long time = sonarSide.ping_median(NUM_READ);
+        if (time!=0){in_tunnel=true;}
+        else{in_tunnel=false;}
         break;
     }
   } else
@@ -301,6 +304,7 @@ void line_follower(void)
     motorLeft  -> setSpeed(speedLeft);
     motorRight -> setSpeed(speedRight); 
     }
+    delay(REFRESH_TIME);
 }
 
 //triggered when abs(sonarSide.ping_cm() - TunnelDistance) < criticalValue
@@ -422,11 +426,9 @@ void loop()
   { leave_box(); }
   do{ 
     line_follower();
-    delay(REFRESH_TIME);
     }while(!is_region);
   is_region=true;
   do{  
-    delay(REFRESH_TIME);
     line_follower();
     if(cubeDetectedFront && !cubeDetectedSide)
     { block_retrieval(); }
@@ -438,7 +440,6 @@ void loop()
   }
   do{
     line_follower();
-    delay(REFRESH_TIME);
   }while(cube_to_destination && !destination_reached);
   block_retrieval(); 
 }
