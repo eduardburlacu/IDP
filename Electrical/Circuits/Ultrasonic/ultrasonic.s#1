@@ -528,7 +528,7 @@ grid 7.5 mm, outline 3.2 x 10.3 mm</description>
 <parts>
 <part name="FRAME1" library="IDP_library" deviceset="FRAME-A4L" device=""/>
 <part name="U1" library="IDP_library" deviceset="HC-SR04" device=""/>
-<part name="C1" library="IDP_library" deviceset="C-EU" device="075-032X103" package3d_urn="urn:adsk.eagle:package:23646/1" value="1u"/>
+<part name="C1" library="IDP_library" deviceset="C-EU" device="075-032X103" package3d_urn="urn:adsk.eagle:package:23646/1" value="10u"/>
 <part name="GND1" library="IDP_library" deviceset="GND" device=""/>
 <part name="P+1" library="IDP_library" deviceset="+5V" device=""/>
 <part name="GND2" library="IDP_library" deviceset="GND" device=""/>
