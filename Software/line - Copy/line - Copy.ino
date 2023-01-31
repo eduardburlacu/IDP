@@ -75,6 +75,9 @@ const uint8_t pinArm = 2;
 const uint8_t pinClaw= 3;
 
 
+
+
+
 // Functions for the line following loop  
 
 void get_state(void)
@@ -82,7 +85,7 @@ void get_state(void)
   LINE[0]     = digitalRead(pinL);
   LINE[1]     = digitalRead(pinR);
   JUNCTION[0] = digitalRead(pinLL);
-  JUNCTION[0] = digitalRead(pinRR);
+  JUNCTION[1] = digitalRead(pinRR);
   delay(2);
 }
 
@@ -92,8 +95,8 @@ void get_error(void)
   Convention: shift to left leads to positive error.
   */
   PREV_THETA = THETA;
-  if (LINE=="01"){ THETA = 1; }
-  else if( LINE=="10" ){THETA = -1; }
+  if (LINE[0] == 0 && LINE[1] == 1){ THETA = 1; }
+  else if( LINE[0] == 1 && LINE[1] == 0){THETA = -1; }
   else {THETA = 0; }
   TOTAL_THETA += THETA;
 }
