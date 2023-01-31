@@ -34,20 +34,20 @@
  uint8_t pickup_distance = 0; // Distance from ultrasound where robot stops
  const uint8_t truck_distance = 0; // Distance from truck where robot stops
 
- float THETA = 0.0;			       // Is 1.0 if the robots goes too much to left
- float PREV_THETA = 0.0;       // Previous step
- float TOTAL_THETA = 0.0;		   // Discrete integral of THETA.
+ int THETA = 0;			       // Is 1.0 if the robots goes too much to left
+ int PREV_THETA = 0;       // Previous step
+ int TOTAL_THETA = 0;		   // Discrete integral of THETA.
 
 
 //       !!!!! PARAMETERS TO BE TUNED BY EXPERIMENT !!!!!!
 
-const uint8_t DELTA=        30;  // Compensation caused by the imbalance in weight of distribution in the robot. Make it positive if it drifts to the left!!
+const uint8_t DELTA=        20;  // Compensation caused by the imbalance in weight of distribution in the robot. Make it positive if it drifts to the left!!
 const uint8_t NUM_READ=      8;  // Number of points to use for average
 const uint8_t RANGE_FRONT = 10;  // Maximum distance allowed to the frontal ultrasonic sensor.
 const uint8_t RANGE_SIDE=   10;  // Maximum distance allowed to the side ultrasonic sensor.
 const uint8_t REFRESH_TIME= 10;  // Time in miliseconds after which a new update is provided
 const unsigned long TAU=   200;  // The required time(ms) to perform a 90 deg turn.
-const uint8_t TOP_SPEED=   120;  // The final speed of the robot as ratio to the maximum available input from the DC motor.
+const uint8_t TOP_SPEED=   150;  // The final speed of the robot as ratio to the maximum available input from the DC motor.
 const uint8_t ROT_SPEED=   150;  // The wheel's complementary speeds when performing a rotation
 
 const float Kd=20;            // PID controller parameters            
@@ -92,13 +92,13 @@ void get_error(void)
   Convention: shift to left leads to positive error.
   */
   PREV_THETA = THETA;
-  if (LINE=="01"){ THETA = 1.0; }
-  else if( LINE=="10" ){THETA = -1.0; }
-  else {THETA = 0.0; }
+  if (LINE=="01"){ THETA = 1; }
+  else if( LINE=="10" ){THETA = -1; }
+  else {THETA = 0; }
   TOTAL_THETA += THETA;
 }
 
-float get_control_signal(void)
+int get_control_signal(void)
 { 
   // Used for the feedback loop of the parameter. The new value of the motor speed is set accordingly.
   return Kp * THETA + Ki * TOTAL_THETA + Kd * (THETA - PREV_THETA);
@@ -270,7 +270,6 @@ void junction_detector(void)
       case 4:
         if(JUNCTION[0]==1 && JUNCTION[1]==1)
         { state=5; 
-          update_region();
         } else if(JUNCTION[0] != JUNCTION[1]){
           Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case4. JUNCTION= ");
           Serial.print(JUNCTION[0]);
@@ -309,7 +308,7 @@ void junction_detector(void)
             motorRight-> setSpeed(0);
             turnRight();
             destination_reached=true;
-          } else{state=1; update_region();}
+          } else{state=1;}
         }
         else if(JUNCTION[0] != JUNCTION[1]){
         Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case6. JUNCTION= ");
@@ -334,7 +333,6 @@ void junction_detector(void)
         }
       }
   Serial.print("exiting junction detector");
-
 }
 
 void ultrasonic_lookup(char* sensor)
@@ -395,16 +393,61 @@ void line_follower(void)
   //  ultrasonic_lookup("front");
   //}
   get_error();
-  float x = get_control_signal();
+  int x = get_control_signal();
   Serial.println(x);
-  if (speedLeft!=TOP_SPEED + DELTA - x && speedRight!=TOP_SPEED - DELTA - x)
+  if (THETA!=0)
     {
-    speedLeft = TOP_SPEED + DELTA - x;
+    speedLeft = TOP_SPEED + DELTA + x;
     speedRight= TOP_SPEED - DELTA - x;
     motorLeft  -> setSpeed(speedLeft);
     motorRight -> setSpeed(speedRight); 
-    }  
+    }
+  
+  
   delay(REFRESH_TIME);
+}
+
+void line_follower_by_rotation()
+{
+  get_state();
+  junction_detector();
+  get_error();
+  if (THETA==0)
+  {
+    if (speedLeft!=TOP_SPEED && speedRight!=TOP_SPEED)
+      {
+      speedLeft = TOP_SPEED;
+      speedRight= TOP_SPEED;
+      motorLeft  -> run(FORWARD);
+      motorRight -> run(FORWARD); 
+      motorLeft  -> setSpeed(speedLeft);
+      motorRight -> setSpeed(speedRight);   
+      }
+  }
+  else if (THETA!=0)
+  {
+  get_error();
+  int x = get_control_signal();
+  speedLeft = x;
+  speedRight= x;
+  if (x>0)
+    {
+      speedLeft = x;
+      speedRight= x;
+      motorLeft  -> run(FORWARD);
+      motorRight -> run(BACKWARD); 
+      motorLeft  -> setSpeed(speedLeft);
+      motorRight -> setSpeed(speedLeft);     
+    }
+    else{    
+      speedLeft = -x;
+      speedRight= -x;
+      motorLeft  -> run(FORWARD);
+      motorRight -> run(BACKWARD); 
+      motorLeft  -> setSpeed(speedLeft);
+      motorRight -> setSpeed(speedLeft); 
+    }
+  }
 }
 
 //triggered when abs(sonarSide.ping_cm() - TunnelDistance) < criticalValue
