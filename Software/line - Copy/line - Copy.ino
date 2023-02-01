@@ -41,7 +41,7 @@
 
 //       !!!!! PARAMETERS TO BE TUNED BY EXPERIMENT !!!!!!
 
-const uint8_t DELTA=        20;  // Compensation caused by the imbalance in weight of distribution in the robot. Make it positive if it drifts to the left!!
+const uint8_t DELTA=        0;  // Compensation caused by the imbalance in weight of distribution in the robot. Make it positive if it drifts to the left!!
 const uint8_t NUM_READ=      8;  // Number of points to use for average
 const uint8_t RANGE_FRONT = 10;  // Maximum distance allowed to the frontal ultrasonic sensor.
 const uint8_t RANGE_SIDE=   10;  // Maximum distance allowed to the side ultrasonic sensor.
@@ -52,7 +52,7 @@ const uint8_t ROT_SPEED=   150;  // The wheel's complementary speeds when perfor
 
 const float Kd=20;            // PID controller parameters            
 const float Kp=45;            // Need to be found experimentally 
-const float Ki=10;            // after the mechanics is done!!
+const float Ki=0;            // after the mechanics is done!!
 
 
 // Define the pin numbers for sensors and motors. To be filled in with Andrew after they finish the electrical circuits!!
@@ -445,8 +445,8 @@ void line_follower_by_rotation()
     else{    
       speedLeft = -x;
       speedRight= -x;
-      motorLeft  -> run(FORWARD);
-      motorRight -> run(BACKWARD); 
+      motorLeft  -> run(BACKWARD);
+      motorRight -> run(FORWARD); 
       motorLeft  -> setSpeed(speedLeft);
       motorRight -> setSpeed(speedLeft); 
     }
@@ -568,15 +568,15 @@ void setup() {
 void loop() 
 {
 //Leave the box at start and after the cube has been placed correctly. !!!!!!!!!!!!NB turn 180 after the cube has been placed successfully
-  if(is_in_box && !cube_to_destination )
-  { leave_box(); }
+  //if(is_in_box && !cube_to_destination )
+  //{ leave_box(); }
 
   do{ 
-    line_follower();
-    }while(!is_region);
+    line_follower_by_rotation();
+    }while(true);
   is_region=true;
   
-  do{  
+  /*do{  
     line_follower();
     if(cubeDetectedFront && !cubeDetectedSide)
     { block_retrieval(); }
@@ -589,5 +589,5 @@ void loop()
   do{
     line_follower();
   }while(cube_to_destination && !destination_reached);
-  block_retrieval(); 
+  block_retrieval(); */
 }
