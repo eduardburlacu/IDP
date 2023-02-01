@@ -4,8 +4,9 @@ Adafruit_MotorShield  AFMS   = Adafruit_MotorShield();
 Adafruit_DCMotor *motorLeft  = AFMS.getMotor(1);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(2);
 
-#define rotTime 300
-#define moveTime 200
+#define rotTime 150
+#define moveTime 100
+
 int speedLeft = 0;
 int speedRight = 0;
 int TOPSPEED = 255;
