@@ -1,0 +1,471 @@
+#include <Adafruit_MotorShield.h>
+#include "Wire.h"
+#include <Servo.h>
+
+#define rotTime  150
+#define moveTime 100
+#define RANGE_FRONT 12
+#define RANGE_SIDE 12
+#define truck_distance 15
+
+#define returnCounter 6
+#define returnTime 1000
+
+#define pinColorRed  0 //check the order here
+#define pinColorTrig 1
+
+#define sideEcho 8
+#define sideTrigger 11
+#define frontEcho 12
+#define frontTrigger 13
+
+#define pinLL 6
+#define pinL 7
+#define pinR 5
+#define pinRR 2
+
+#define pinColorOut 3
+#define pinMoving A5
+
+int state=0;
+int stateTruckBlue=1; //0 if intending to leave on surface and 1 if intending to leave it on the box
+int stateTruckRed=1; //0 if intending to leave on surface and 1 if intending to leave it on the box
+int counter=0;
+unsigned long TAU=1950;
+unsigned long INTERVAL = 300;
+unsigned long TURN_DELAY=1100;
+
+// Initialize motors and sensors
+Adafruit_MotorShield  AFMS   = Adafruit_MotorShield();
+Adafruit_DCMotor *motorLeft  = AFMS.getMotor(1);
+Adafruit_DCMotor *motorRight = AFMS.getMotor(2);
+Servo servoArm;
+Servo servoClaw;
+int arm_up=10;
+int arm_down=10;
+int arm_open=5;
+int claw_open=10;
+int claw_close=20;
+
+int speedLeft = 0;
+int speedRight = 0;
+int TOPSPEED = 255;
+int SLOWDOWN = TOPSPEED * 0.6;
+
+int ll = 0;
+int l = 0;
+int r = 0;
+int rr= 0;
+
+unsigned long start = 0;
+
+bool to_tunnel=false;
+bool in_tunnel=false;
+
+bool cube_to_destination = false;
+bool cubeDetectedSide = false;
+
+bool colorRed=false;
+bool colorDetected=false;
+bool is_moving=false;
+bool is_returning=false;
+
+unsigned long duration;
+
+int TunnelDistance = 8;
+int TunnelExit = 0;
+
+int pickup_distance = 5;
+
+void setup() {
+  delay(3000);
+  digitalWrite(pinMoving,LOW);
+  Serial.begin(9600);
+  AFMS.begin();
+  pinMode(pinLL, INPUT);
+  pinMode(pinL, INPUT);
+  pinMode(pinR, INPUT);
+  pinMode(pinRR, INPUT);
+  
+  pinMode(2, OUTPUT);
+  pinMode(3, INPUT);
+
+  pinMode(pinMoving,OUTPUT);
+  pinMode(pinColorRed, INPUT);
+  pinMode(pinColorTrig,INPUT);
+  pinMode(pinColorOut, OUTPUT);
+
+  motorLeft -> setSpeed(0);
+  motorRight -> setSpeed(0);
+  motorLeft -> run(FORWARD);
+  motorRight -> run(FORWARD);
+  servoArm.attach(0); // TBD
+  servoClaw.attach(0); // TBD
+}
+
+void turnLeft() {
+  delay(TURN_DELAY);
+  motorLeft -> setSpeed(TOPSPEED);
+  motorRight-> setSpeed(TOPSPEED);
+  motorLeft -> run(BACKWARD);
+  motorRight-> run(FORWARD);
+  delay(TAU);
+  motorLeft  -> run(FORWARD);
+  motorLeft  -> setSpeed(TOPSPEED);
+  motorRight -> setSpeed(TOPSPEED);
+  speedLeft = TOPSPEED;
+  speedRight = TOPSPEED;
+}
+
+void turnRight() {
+  delay(TURN_DELAY);
+  motorLeft -> setSpeed(TOPSPEED);
+  motorRight-> setSpeed(TOPSPEED);
+  motorLeft -> run(FORWARD);
+  motorRight-> run(BACKWARD);
+  delay(TAU);
+  motorRight  -> run(FORWARD);
+  motorLeft  -> setSpeed(TOPSPEED);
+  motorRight -> setSpeed(TOPSPEED);
+}
+
+void turn180(void){
+  motorLeft -> setSpeed(TOPSPEED);
+  motorRight-> setSpeed(TOPSPEED);
+  motorLeft -> run(FORWARD);
+  motorRight-> run(BACKWARD);
+  delay( 2 * TAU);
+  motorRight  -> run(FORWARD);
+  motorLeft  -> setSpeed(TOPSPEED);
+  motorRight -> setSpeed(TOPSPEED);
+}
+
+unsigned long readUltrasonicDistance(int inPin, int outPin) {
+  //Send out trigger pulse
+  digitalWrite(outPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(outPin, LOW);
+
+  //Read echo pulse length
+  duration = pulseIn(inPin, HIGH);
+  return duration/58;
+}
+
+void junction_detector() {
+  switch(state)
+  {
+    case 0:
+      if(is_returning)
+      {
+        delay(returnTime);
+        motorLeft ->setSpeed(0);
+        motorRight->setSpeed(0);
+        is_moving=false;
+        digitalWrite(pinMoving,LOW);
+      }
+      else
+      {
+        if(ll == 1 || rr == 1){
+          state = 1;
+          start = millis();
+        }
+
+        else if (ll != rr)
+        {  
+          Serial.print("ERROR IN JUNCTION DETECTOR SWITCH case0. JUNCTION= ");
+          Serial.print(ll);
+          Serial.println(rr);
+        }
+      }
+      break;
+
+    case 1:
+      if((ll==1 || rr==1) && millis() > start + INTERVAL)
+      {
+        turnRight();
+        state = 2;
+        start = millis();
+      }
+      else if( ll==0 && rr==1){
+      turnRight();
+      state=0;        
+      }  
+      break;
+
+    case 2:
+      if(rr == 1 && millis() > start + INTERVAL){
+        start = millis();
+        if (cube_to_destination && colorDetected && !colorRed){turnRight();} //code to be added once navigation works
+        else{
+          l=0;
+          r=0;
+          state=3;      
+        }
+      } else if( ll!=rr){
+        Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case2. JUNCTION= ");
+        Serial.print(ll);
+        Serial.println(rr);
+      }  
+      break;
+    
+    case 3:        
+      if(ll==1 && millis() > start + INTERVAL)
+      {
+        start = millis();
+        if( readUltrasonicDistance(sideEcho, sideTrigger) <= RANGE_SIDE) {cubeDetectedSide = true;}
+        if(cubeDetectedSide){
+          turnLeft();
+        } 
+        else{
+          l=0;
+          state=4;
+        }
+      } else if( ll!=rr){
+        Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case3. JUNCTION= ");
+        Serial.print(ll);
+        Serial.println(rr);
+      }  
+      break;
+
+    case 4:
+      if (cubeDetectedSide)
+      if (ll==1 || rr==1 && millis() > start + INTERVAL){  //if (ll==1 && rr==1 && millis() > start + INTERVAL){ is the real code, changed with || because one sensor does not work
+        start = millis();
+        l=0;
+        r=0;
+        state=5;
+      } else if( ll!=rr){
+        Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case4. JUNCTION= ");
+        Serial.print(ll);
+        Serial.println(rr);
+      }  
+      break;
+    
+    case 5:
+      if(ll==1 && millis() > start + INTERVAL){
+        //Code to be added to take the cube after we check the navigation works.
+        start = millis();
+        l=0;
+        state=6;
+        to_tunnel=true;
+        } else if( ll!=rr){
+        Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case5. JUNCTION= ");
+        Serial.print(ll);
+        Serial.println(rr);
+      } 
+      break;
+
+    case 6:
+      if(rr==1 && millis() > start + INTERVAL){
+        start = millis();
+        if (cube_to_destination && colorDetected && colorRed){turnRight();}
+        else{
+          r=1;
+          state=1;
+          to_tunnel=false;
+        }
+      }else if( ll!=rr){
+        Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH case6. JUNCTION= ");
+        Serial.print(ll);
+        Serial.println(rr);
+      } 
+      break;
+    default:
+            Serial.print("ERROR IN JUNCTION_DETECTOR SWITCH. It entered default state ");
+            break;
+  }
+}
+
+//(millis() > start + INTERVAL) &&
+void lineFollowing() {
+
+  ll = digitalRead(pinLL);
+  rr=digitalRead(pinRR);
+  if (ll == 0) {l = digitalRead(pinL);}
+  if (rr == 0) {r = digitalRead(pinR);}
+
+  junction_detector();
+
+  if (l == 1) {
+    if (speedLeft != SLOWDOWN || speedRight != SLOWDOWN) {
+      motorLeft -> setSpeed(SLOWDOWN);
+      motorRight -> setSpeed(SLOWDOWN);
+      speedLeft = SLOWDOWN;
+      speedRight = SLOWDOWN;
+    }
+    motorLeft -> run(BACKWARD);
+    motorRight -> run(FORWARD);
+    delay(rotTime);
+    motorLeft -> run(FORWARD);
+    delay(moveTime);
+    Serial.println("left");
+  }
+  if (r == 1) {
+    if (speedLeft != SLOWDOWN || speedRight != SLOWDOWN) {
+      motorLeft -> setSpeed(SLOWDOWN);
+      motorRight -> setSpeed(SLOWDOWN);
+      speedLeft = SLOWDOWN;
+      speedRight = SLOWDOWN;
+    }
+    motorLeft -> run(FORWARD);
+    motorRight -> run(BACKWARD);
+    delay(rotTime);
+    motorRight -> run(FORWARD);
+    delay(moveTime);
+    Serial.println("right");
+  }
+  if (l == 0 && r == 0) {
+    if (speedLeft != TOPSPEED || speedRight != TOPSPEED){
+      motorLeft -> setSpeed(TOPSPEED);
+      motorRight -> setSpeed(TOPSPEED);
+      motorLeft -> run(FORWARD);
+      motorRight -> run(FORWARD);
+      speedLeft = TOPSPEED;
+      speedRight = TOPSPEED;
+    }
+    Serial.println("straight");
+    Serial.print(l);
+    Serial.println(r);
+  }
+}
+
+// Triggered when abs(sonarSide.ping_cm() - TunnelDistance) < criticalValue
+void tunnel_navigation() {
+  int diff = readUltrasonicDistance(sideEcho, sideTrigger) - TunnelDistance;
+  Serial.println(diff);
+  if (diff > 0) {
+    if (speedLeft != SLOWDOWN || speedRight != SLOWDOWN) {
+      motorLeft -> setSpeed(SLOWDOWN);
+      motorRight -> setSpeed(SLOWDOWN);
+      speedLeft = SLOWDOWN;
+      speedRight = SLOWDOWN;
+    }
+    motorLeft -> run(BACKWARD);
+    motorRight -> run(FORWARD);
+    delay(rotTime * 0.6);
+    motorLeft -> run(FORWARD);
+    delay(moveTime * 2);
+  }
+  else if (diff < 0) {
+    if (speedLeft != SLOWDOWN || speedRight != SLOWDOWN) {
+      motorLeft -> setSpeed(SLOWDOWN);
+      motorRight -> setSpeed(SLOWDOWN);
+      speedLeft = SLOWDOWN;
+      speedRight = SLOWDOWN;
+    }
+    motorLeft -> run(FORWARD);
+    motorRight -> run(BACKWARD);
+    delay(rotTime * 0.6);
+    motorRight -> run(FORWARD);
+    delay(moveTime * 2);
+  }
+  else {
+    if (speedLeft != TOPSPEED || speedRight != TOPSPEED){
+      motorLeft -> setSpeed(TOPSPEED);
+      motorRight -> setSpeed(TOPSPEED);
+      motorLeft -> run(FORWARD);
+      motorRight -> run(FORWARD);
+      speedLeft = TOPSPEED;
+      speedRight = TOPSPEED;
+    }
+  }
+}
+
+// to be called when robot is set distance from block
+void block_retrieval() {
+  //move towards block until critical distance is reached (possibly slow down?)
+  while (readUltrasonicDistance(frontEcho, frontTrigger) > pickup_distance) { // TBD
+    lineFollowing();
+  }
+  //stop robot
+  motorLeft  -> setSpeed(0);
+  motorRight -> setSpeed(0);
+  speedLeft = 0;
+  speedRight = 0;
+  digitalWrite(pinMoving,LOW);
+  //descend claw
+  servoArm.write(arm_down);
+  //close claw 
+  servoClaw.write(claw_close);
+  //lift claw
+  servoArm.write(arm_up);
+  
+  //detect color
+  colorDetected = digitalRead(pinColorTrig);
+  digitalWrite(pinColorOut,HIGH);
+  if (colorDetected) {colorRed = digitalRead(pinColorRed);}
+  else{ Serial.println("Color detector is broken");}
+
+  if (counter!= returnCounter){
+    counter++;
+    cube_to_destination =true;
+    } else{ is_returning=true;}
+}
+
+// to be called when robot is set distance from truck
+void block_placement() {
+  //move towards truck until critical distance is reached (possibly slow down?)
+  while (readUltrasonicDistance(frontEcho, frontTrigger) > truck_distance) {
+    lineFollowing();
+  }
+  //stop robot
+  motorLeft  -> setSpeed(0);
+  motorRight -> setSpeed(0);
+  speedLeft = 0;
+  speedRight = 0;
+  digitalWrite(pinMoving,LOW);
+  //open claw 
+  servoClaw.write(claw_open);
+  //reverse to give space to turn
+  motorLeft -> run(BACKWARD);
+  motorRight -> run(BACKWARD);
+  motorLeft -> setSpeed(TOPSPEED);
+  motorRight -> setSpeed(TOPSPEED);
+  speedLeft = TOPSPEED;
+  speedRight = TOPSPEED;
+  delay(1500); // reverses for 1.5 seconds
+  motorLeft  -> setSpeed(0);
+  motorRight -> setSpeed(0);
+  cube_to_destination=false;
+  colorRed=false;
+  colorDetected=false;
+  digitalWrite(pinColorOut, LOW);
+  turn180();
+  //motorLeft -> run(FORWARD);
+  //motorRight -> run(FORWARD);
+  //turn 180 degrees
+  // turnRight(180);
+}
+
+void loop() 
+{
+  if (in_tunnel){tunnel_navigation();}
+  else
+  {
+    /*
+    if (state==3 || state==4 || state==5) //cube collection region
+    { if (readUltrasonicDistance(0,0)<=RANGE_FRONT){
+      block_retrieval();
+      turn180();
+      } 
+    }
+    2 1 color
+    0 line
+    7 6  line
+    Side->>>
+    echo trig 8
+    echo 11
+    Front->>>
+    trig 12
+    echo 13
+    */   
+    lineFollowing();
+  }
+  if ( state==6 && readUltrasonicDistance(sideEcho, sideTrigger) <= RANGE_SIDE){
+  in_tunnel=true;
+  } else{in_tunnel=false;}
+  if (speedLeft!=0 || speedRight!=0){
+  digitalWrite(pinMoving,HIGH);  
+  } else{digitalWrite(pinMoving, LOW);}
+  delay(50);
+}
