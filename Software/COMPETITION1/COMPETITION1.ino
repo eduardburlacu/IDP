@@ -338,7 +338,7 @@ void setup() {
 
 void loop() {
   
-  if ( digitalRead(pinButton) == HIGH)
+  if ( digitalRead(pinButton) == HIGH && !button)
   {
     button = true;
     speedLeft=255;
