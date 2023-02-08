@@ -21,6 +21,7 @@ Adafruit_DCMotor *motorLeft  = AFMS.getMotor(3);
 Adafruit_DCMotor *motorRight = AFMS.getMotor(4);
 
 // Boolean start button variable
+bool parked=false;
 bool button = false;
 bool START = false;
 
@@ -337,6 +338,7 @@ void setup() {
 }
 
 void loop() {
+  
   if ( digitalRead(pinButton) == HIGH)
   {
     button = true;
@@ -349,9 +351,8 @@ void loop() {
     delay(300);
   }
 
-if (button==true)
+if (button && !parked)
 {
-
   if ( sonarSide.ping_cm()  != 0 ) {
     in_tunnel = true;
     tunnelNavigation();
@@ -369,7 +370,7 @@ if (button==true)
       motorLeft-> setSpeed(speedLeft);
       motorRight-> setSpeed(speedRight);
       digitalWrite(pinMoving,HIGH);
-      delay(300000);
+      parked=true;
     }
   }
 
