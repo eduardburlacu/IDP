@@ -316,7 +316,6 @@ void setup() {
   Serial.begin(9600);
   AFMS.begin();
   pinMode(pinMoving,OUTPUT);
-  digitalWrite(pinMoving,HIGH);
   pinMode(6,INPUT);
   pinMode(7, INPUT);
   pinMode(5, INPUT);
@@ -348,6 +347,7 @@ void loop() {
     motorRight -> setSpeed(speedRight);
     motorLeft -> run(FORWARD);
     motorRight -> run(FORWARD);
+    digitalWrite(pinMoving,HIGH);
     delay(300);
   }
 
