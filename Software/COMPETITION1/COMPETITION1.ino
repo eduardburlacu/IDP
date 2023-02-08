@@ -112,7 +112,7 @@ void junction_detector()
   {
     case 0:
         if(ll == 1 || rr == 1){
-          state = 1;
+          state = (is_returning) ? 0 : 1;
           start = millis();} 
         else if (ll != rr)
         { 
@@ -138,6 +138,7 @@ void junction_detector()
       }
       break;       
     
+    //Could maybe add redundancy here to say if is_returning run the parking code anyway.
     case 2:
       if(rr == 1 && millis() > start + INTERVAL){
       start = millis();
