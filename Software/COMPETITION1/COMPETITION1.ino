@@ -123,20 +123,18 @@ void junction_detector()
           break;
 
     case 1:
-      is_returning=true;
-      if((ll==1 || rr==1) && millis() > start + INTERVAL)
-      {
-        turnRight();
-        state = 2;
-        start = millis();
-      }
-      else if( ll==0 && rr==1 && millis() > start + INTERVAL )
+      if( ll==0 && rr==1 && millis() > start + INTERVAL && is_returning)
       {
         Serial.println("In case 1, current state is: ");
         Serial.println(state);
         turnRight();
         state=0;
         start=millis();
+      } else if((ll==1 || rr==1) && millis() > start + INTERVAL)
+      {
+        turnRight();
+        state = 2;
+        start = millis();
       }
       break;       
     
