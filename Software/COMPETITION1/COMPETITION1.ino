@@ -7,8 +7,8 @@
 #define pinButton A1
 
 //Color detection pins. !!!!!!!! CHECK TOMORROW
-#define pinBlueDetector 0
-#define pinRedDetector 1
+#define pinBlueDetector 1
+#define pinRedDetector 0
 #define pinBlue A3
 #define pinRed A2
 
