@@ -9,8 +9,8 @@
 //Color detection pins. !!!!!!!! CHECK TOMORROW
 #define pinBlueDetector 0
 #define pinRedDetector 1
-#define pinBlue A2
-#define pinRed A3
+#define pinBlue A3
+#define pinRed A2
 
 NewPing sonarSide(8,11, 15);
 //NewPing sonarFront(,,);
@@ -25,7 +25,7 @@ bool parked=false;
 bool button = false;
 bool START = false;
 
-int state=1;
+int state=0;
 int speedLeft = 0;
 int speedRight = 0;
 const int TOPSPEED = 255;
@@ -38,14 +38,14 @@ int rr= 0;
 
 
 unsigned long duration; //useless
-const unsigned long PARK_TIME = 4000;
+const unsigned long PARK_TIME = 2500;
 const int TunnelDistance = 9;
 const int rangeSide = 12;
 bool in_tunnel = false;
 bool is_returning=false;
-unsigned long INTERVAL = 1000;
+unsigned long INTERVAL = 300;
 unsigned long start = 0;
-unsigned long TURN_DELAY=1050;
+unsigned long TURN_DELAY=1500;
 unsigned long TAU=2000;
 
 void turnLeft() {
@@ -111,7 +111,8 @@ void junction_detector()
   switch(state)
   {
     case 0:
-        if(ll == 1 || rr == 1){
+    Serial.println("State 0");
+        if((ll == 1 || rr == 1) && millis() > start + INTERVAL){
           state = (is_returning) ? 0 : 1;
           start = millis();} 
         else if (ll != rr)
@@ -123,16 +124,19 @@ void junction_detector()
           break;
 
     case 1:
+    Serial.println("State 1");
       if( ll==0 && rr==1 && millis() > start + INTERVAL && is_returning)
       {
         Serial.println("In case 1, current state is: ");
         Serial.println(state);
         turnRight();
+        Serial.println("Turning Here");
         state=0;
         start=millis();
       } else if((ll==1 || rr==1) && millis() > start + INTERVAL)
       {
         turnRight();
+        Serial.println("Turning Else");
         state = 2;
         start = millis();
       }
@@ -140,6 +144,7 @@ void junction_detector()
     
     //Could maybe add redundancy here to say if is_returning run the parking code anyway.
     case 2:
+    Serial.println("State 2");
       if(rr == 1 && millis() > start + INTERVAL){
       start = millis();
       l=0;
@@ -152,7 +157,8 @@ void junction_detector()
       }
       break;
 
-    case 3:    
+    case 3: 
+    Serial.println("State 3");   
       if(ll==1 && millis() > start + INTERVAL)
       {
         start = millis();
@@ -166,6 +172,7 @@ void junction_detector()
       break;
 
     case 4:
+    Serial.println("State 4");
       if (ll==1 && rr==1 && millis() > start + INTERVAL){  //if (ll==1 && rr==1 && millis() > start + INTERVAL){ is the real code, changed with || because one sensor does not work
         start = millis();
         l=0;
@@ -179,6 +186,7 @@ void junction_detector()
       break;
 
     case 5:
+    Serial.println("State 5");
       if(ll==1 && millis() > start + INTERVAL){    
         start = millis();
         l=0;
@@ -191,8 +199,9 @@ void junction_detector()
       break;
 
     case 6:
+    Serial.println("State 6");
       is_returning=true;
-      if(rr==1 && millis() > start + INTERVAL){
+      if((rr==1 || ll==1) && millis() > start + INTERVAL){
         start = millis();
         r=1;
         state=1;
@@ -218,13 +227,14 @@ void lineFollowing() {
   l = digitalRead(7);
   r = digitalRead(6);
   junction_detector();
-
+  Serial.println("State: " + state);
   if (l == 1) {
     if (speedLeft != SLOWDOWN || speedRight != SLOWDOWN) {
       motorLeft -> setSpeed(SLOWDOWN);
       motorRight -> setSpeed(SLOWDOWN);
       speedLeft = SLOWDOWN;
       speedRight = SLOWDOWN;
+      Serial.println("LEFT");
     }
     motorLeft -> run(BACKWARD);
     motorRight -> run(FORWARD);
@@ -238,6 +248,7 @@ void lineFollowing() {
       motorRight -> setSpeed(SLOWDOWN);
       speedLeft = SLOWDOWN;
       speedRight = SLOWDOWN;
+      Serial.println("RIGHT");
     }
     motorLeft -> run(FORWARD);
     motorRight -> run(BACKWARD);
@@ -253,6 +264,7 @@ void lineFollowing() {
       motorRight -> run(FORWARD);
       speedLeft = TOPSPEED;
       speedRight = TOPSPEED;
+      Serial.println("Forward");
     }
   }
 }
@@ -311,7 +323,6 @@ void tunnelNavigation() {
 }
 
 void setup() {
-  delay(3000);
   Serial.begin(9600);
   AFMS.begin();
   pinMode(pinMoving,OUTPUT);
@@ -321,7 +332,7 @@ void setup() {
   pinMode(2, INPUT);
   pinMode(8, OUTPUT);
   pinMode(11, INPUT);
-  pinMode(pinButton,INPUT);
+  pinMode(pinButton,INPUT);  
   //Color pins
   pinMode(pinBlueDetector, INPUT); 
   pinMode(pinRedDetector, INPUT); 
@@ -333,6 +344,7 @@ void setup() {
   motorRight -> setSpeed(speedRight);
   motorLeft -> run(FORWARD);
   motorRight -> run(FORWARD);
+  digitalWrite(pinMoving, HIGH);
 }
 
 void loop() {
@@ -346,7 +358,7 @@ void loop() {
     motorRight -> setSpeed(speedRight);
     motorLeft -> run(FORWARD);
     motorRight -> run(FORWARD);
-    digitalWrite(pinMoving,HIGH);
+    digitalWrite(pinMoving,LOW);
     delay(300);
   }
 
@@ -354,10 +366,12 @@ if (button && !parked)
 {
   if ( sonarSide.ping_cm()  != 0 ) {
     in_tunnel = true;
+    state = 6;
     tunnelNavigation();
   }
   else {
     in_tunnel = false;
+    Serial.println("Line Following");
     lineFollowing(); 
     if (state==0 && is_returning){
       start=millis();
@@ -369,7 +383,8 @@ if (button && !parked)
       motorLeft-> setSpeed(speedLeft);
       motorRight-> setSpeed(speedRight);
       digitalWrite(pinMoving,HIGH);
-      parked=true;
+      parked = true;
+      delay(5000000);
     }
   }
 
